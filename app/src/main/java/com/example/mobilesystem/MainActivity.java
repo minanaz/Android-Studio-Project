@@ -1,101 +1,53 @@
 // Student: Amina Nazarova L1
 // Student id: 54831
-// SET 1
+// SET 2
 
 package com.example.mobilesystem;
-
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import android.widget.EditText;
-import android.widget.Button;
-import android.widget.TextView;
-import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
-    int randomNumber;
-    int attempts = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        //Witaj input
-        EditText editText = findViewById(R.id.editTextName);
-        Button button = findViewById(R.id.buttonWitaj);
-        TextView result = findViewById(R.id.textViewResult);
+        Lamp lamp = new Lamp();
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String input = editText.getText().toString().trim();
+        // Test 1 turn on/off
+        lamp.turnOn();
+        Log.d("TEST", "Turn ON: " + (lamp.isOn() ? "PASS" : "FAIL"));
 
-                if (!input.isEmpty()) {
-                    result.setText("Witaj " + input);
-                } else {
-                    result.setText("Przedstaw się.");
-                }
-            }
-        });
+        lamp.turnOff();
+        Log.d("TEST", "Turn OFF: " + (!lamp.isOn() ? "PASS" : "FAIL"));
 
-        //Number guessing game
-        randomNumber = (int)(Math.random() * 10) + 1;
-        EditText editTextGuess = findViewById(R.id.editTextGuess);
-        Button buttonGuess = findViewById(R.id.buttonGuess);
-        TextView resultNumber = findViewById(R.id.textViewResultNumber);
+        // Test 2 brighten to 10
+        lamp.turnOn();
+        for (int i = 0; i < 9; i++) {
+            lamp.brighten();
+        }
+        Log.d("TEST", "Intensity 10: " + (lamp.getIntensity() == 10 ? "PASS" : "FAIL"));
 
-        buttonGuess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        // Test 3 burn bulb
+        lamp.brighten();
+        Log.d("TEST", "Bulb burned: " + (lamp.isBulbBurned() ? "PASS" : "FAIL"));
 
-                String input = editTextGuess.getText().toString().trim();
-                if (input.isEmpty()) {
-                    resultNumber.setText("Please enter an integer number.");
-                    return;
-                }
-                int guess;
-                try {
-                    guess = Integer.parseInt(input);
-                } catch (NumberFormatException e) {
-                    resultNumber.setText("Please enter an integer number.");
-                    return;
-                }
-                if (guess < 1 || guess > 10) {
-                    resultNumber.setText("Number must be in range 1..10.");
-                    return;
-                }
-                attempts++;
-                if (guess < randomNumber) {
-                    resultNumber.setText("Value too small");
-                }
-                else if (guess > randomNumber) {
-                    resultNumber.setText("Value too large");
-                }
-                else {
-                    if (attempts == 2) {
-                        resultNumber.setText("Correct, achieved on the 2nd attempt");
-                        randomNumber = (int)(Math.random() * 10) + 1;
-                        attempts = 0;
-                    } else {
-                        resultNumber.setText("Correct, but not on the 2nd attempt. Try again.");
-                        randomNumber = (int)(Math.random() * 10) + 1;
-                        attempts = 0;
-                    }
-                }
-                editTextGuess.setText("");
-            }
-        });
+        // Test 4 burned bulb cannot shine
+        lamp.turnOff();
+        lamp.turnOn();
+        Log.d("TEST", "Burned bulb no light: " + (!lamp.isShining() ? "PASS" : "FAIL"));
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        // Test 5 replace bulb when OFF
+        boolean replaced = lamp.replaceBulb();
+        Log.d("TEST", "Replace bulb OFF: " + (replaced ? "PASS" : "FAIL"));
+
+        // Test 6 replace bulb when ON
+        lamp.turnOn();
+        boolean failReplace = lamp.replaceBulb();
+        Log.d("TEST", "Replace bulb ON: " + (!failReplace ? "PASS" : "FAIL"));
+
+
     }
 }

@@ -5,7 +5,6 @@
 **Student ID:** 54831
 
 ## Description
-This Android application contains features of the SET 1 tasks: 
-1. Hello World screen
-2. User input greeting system
-3. Number guessing game with validation and attempt tracking
+This Android application contains features of the SET 2 tasks: 
+1. Implementation of Lamp and Bulb classes and methods
+2. Test mechanism with results
